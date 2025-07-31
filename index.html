@@ -1,51 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maverick PC</title>
-  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="icon" type="image/png" href="logo.png">
   <style>
     body {
-      background-color: #0f172a;
-      color: #f1f5f9;
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0e1c2e;
+      color: white;
       text-align: center;
     }
 
-    header {
-      padding: 20px;
-    }
-
-    header img {
-      height: 60px;
+    img {
+      max-width: 200px;
+      margin-top: 20px;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin: 10px 0;
-    }
-
-    section {
-      margin: 20px auto;
-      max-width: 800px;
-      padding: 10px;
+      font-size: 2.5em;
+      margin-bottom: 10px;
     }
 
     .service {
-      background-color: #1e293b;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      padding: 15px;
+      background-color: #1b2e4b;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
       text-align: left;
     }
 
     .whatsapp-button {
-      background-color: #25d366;
-      color: #fff;
-      bor
+      background-color: #25D366;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      margin: 20px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
 
+    .reviews-section {
+      background-color: #14253d;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 700px;
+    }
+
+    .reviews-section h2 {
+      margin-bottom: 10px;
+    }
+
+    .review {
+      background-color: #1f3554;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    input, textarea, select, button {
+      font-family: inherit;
+      font-size: 1em;
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    button.submit-button {
+      background-color: #2c74f2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="logo.png" alt="Maverick PC Logo">
+  <h1>Maverick PC</h1>
+
+  <div class="service">
+    <h3>Instalación de programas</h3>
+    <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
+  </div>
+
+  <div class="service">
+    <h3>Reparación de PCs</h3>
+    <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverle el rendimiento a tu equipo.</p>
+  </div>
+
+  <div class="service">
+    <h3>Arreglos técnicos</h3>
+    <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
+  </div>
+
+  <div class="service">
+    <h3>Asistencia remota a todo el mundo</h3>
+    <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
+  </div>
+
+  <a href="https://wa.me/5492215483353" class="whatsapp-button" target="_blank">¡Escribinos por WhatsApp!</a>
+
+  <div class="reviews-section">
+    <h2>Reseñas de clientes</h2>
+    <div id="reviewsContainer"></div>
+    <form id="reviewForm">
+      <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
+      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br>
+      <label for="ratingInput">Puntaje:</label>
+      <select id="ratingInput" required>
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select><br>
+      <button type="submit" class="submit-button">Enviar reseña</button>
+    </form>
+  </div>
+
+  <script>
+    const reviewsContainer = document.getElementById('reviewsContainer');
+    const reviewForm = document.getElementById('reviewForm');
+
+    const storedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    storedReviews.forEach(displayReview);
+
+    reviewForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('nameInput').value;
+      const comment = document.getElementById('commentInput').value;
+      const rating = document.getElementById('ratingInput').value;
+
+      const review = { name, comment, rating };
+      storedReviews.push(review);
+      localStorage.setItem('reviews', JSON.stringify(storedReviews));
+      displayReview(review);
+
+      reviewForm.reset();
+    });
+
+    function displayReview({ name, comment, rating }) {
+      const div = document.createElement('div');
+      div.classList.add('review');
+      div.innerHTML = `<strong>${name}</strong> <br> ${'⭐'.repeat(rating)}<br> ${comment}`;
+      reviewsContainer.appendChild(div);
+    }
+  </script>
+</body>
 </html>
+
 
