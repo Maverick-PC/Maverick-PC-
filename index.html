@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,17 +13,14 @@
       color: white;
       text-align: center;
     }
-
     img {
       max-width: 200px;
       margin-top: 20px;
     }
-
     h1 {
       font-size: 2.5em;
       margin-bottom: 10px;
     }
-
     .service {
       background-color: #1b2e4b;
       margin: 20px auto;
@@ -34,7 +30,6 @@
       max-width: 600px;
       text-align: left;
     }
-
     .whatsapp-button {
       background-color: #25D366;
       color: white;
@@ -47,7 +42,6 @@
       text-decoration: none;
       display: inline-block;
     }
-
     .reviews-section {
       background-color: #14253d;
       margin: 40px auto;
@@ -56,11 +50,9 @@
       width: 90%;
       max-width: 700px;
     }
-
     .reviews-section h2 {
       margin-bottom: 10px;
     }
-
     .review {
       background-color: #1f3554;
       margin: 10px 0;
@@ -68,7 +60,6 @@
       border-radius: 8px;
       text-align: left;
     }
-
     input, textarea, select, button {
       font-family: inherit;
       font-size: 1em;
@@ -79,7 +70,6 @@
       width: 100%;
       max-width: 600px;
     }
-
     button.submit-button {
       background-color: #2c74f2;
       color: white;
@@ -138,31 +128,35 @@
     const reviewsContainer = document.getElementById('reviewsContainer');
     const reviewForm = document.getElementById('reviewForm');
 
-    const storedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    let storedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+    storedReviews = storedReviews.filter(r => r.name && r.comment && r.rating); // Filtrar vacíos
     storedReviews.forEach(displayReview);
 
     reviewForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      const name = document.getElementById('nameInput').value;
-      const comment = document.getElementById('commentInput').value;
+      const name = document.getElementById('nameInput').value.trim();
+      const comment = document.getElementById('commentInput').value.trim();
       const rating = document.getElementById('ratingInput').value;
+
+      if (!name || !comment || !rating) return;
 
       const review = { name, comment, rating };
       storedReviews.push(review);
       localStorage.setItem('reviews', JSON.stringify(storedReviews));
       displayReview(review);
-
       reviewForm.reset();
     });
 
     function displayReview({ name, comment, rating }) {
       const div = document.createElement('div');
       div.classList.add('review');
-      div.innerHTML = `<strong>${name}</strong> <br> ${'⭐'.repeat(rating)}<br> ${comment}`;
+      div.innerHTML = `<strong>${name}</strong><br>${'⭐'.repeat(rating)}<br>${comment}`;
       reviewsContainer.appendChild(div);
     }
   </script>
 </body>
 </html>
+
 
 
