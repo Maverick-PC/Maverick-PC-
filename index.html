@@ -106,12 +106,22 @@
       const reviewForm = document.getElementById("reviewForm");
 
       async function loadReviews() {
-        reviewsContainer.innerHTML = "";
-        const querySnapshot = await getDocs(collection(db, "reviews"));
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          displayReview(data.name, data.comment, data.rating);
-        });
+        reviewsContainer.innerHTML = "<p>Cargando reseñas...</p>";
+        try {
+          const querySnapshot = await getDocs(collection(db, "reviews"));
+          reviewsContainer.innerHTML = ""; // limpio antes de cargar
+          if (querySnapshot.empty) {
+            reviewsContainer.innerHTML = "<p>No hay reseñas aún. ¡Sé el primero en dejar una!</p>";
+          } else {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              displayReview(data.name, data.comment, data.rating);
+            });
+          }
+        } catch (error) {
+          reviewsContainer.innerHTML = "<p>Error al cargar reseñas.</p>";
+          console.error("Error leyendo reseñas:", error);
+        }
       }
 
       function displayReview(name, comment, rating) {
@@ -127,11 +137,19 @@
         const comment = document.getElementById("commentInput").value.trim();
         const rating = parseInt(document.getElementById("ratingInput").value);
 
-        if (!name || !comment || !rating) return;
+        if (!name || !comment || !rating) {
+          alert("Por favor, completá todos los campos.");
+          return;
+        }
 
-        await addDoc(collection(db, "reviews"), { name, comment, rating });
-        displayReview(name, comment, rating);
-        reviewForm.reset();
+        try {
+          await addDoc(collection(db, "reviews"), { name, comment, rating });
+          displayReview(name, comment, rating);
+          reviewForm.reset();
+        } catch (error) {
+          alert("Error al enviar la reseña.");
+          console.error("Error guardando reseña:", error);
+        }
       });
 
       loadReviews();
@@ -184,5 +202,4 @@
   </div>
 </body>
 </html>
-
 
