@@ -7,175 +7,45 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <style>
     body {
+      background-color: #0f172a;
+      color: #f1f5f9;
       font-family: Arial, sans-serif;
-      background-color: #0e1b2a;
-      color: #ffffff;
       margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
       padding: 20px;
     }
-    .container {
-      max-width: 800px;
-      margin: auto;
+
+    header img {
+      height: 60px;
     }
-    h1, h2 {
-      text-align: center;
-      color: #fff;
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 10px 0;
     }
-    img {
-      display: block;
-      margin: 0 auto 10px;
-      max-width: 150px;
-    }
-    .service {
-      background-color: #1e2a3a;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-    button.whatsapp {
-      background-color: #25D366;
-      border: none;
-      padding: 10px 20px;
-      color: white;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      display: block;
+
+    section {
       margin: 20px auto;
-    }
-    .reviews-section {
-      background-color: #1e2a3a;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 20px;
-    }
-    .review {
-      background-color: #2a3b4d;
-      border-radius: 6px;
+      max-width: 800px;
       padding: 10px;
-      margin-bottom: 10px;
-    }
-    .stars {
-      color: gold;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 8px;
-      margin: 5px 0 10px;
-      border-radius: 4px;
-      border: none;
-    }
-    .star-input span {
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .star-input span:hover,
-    .star-input span.selected {
-      color: gold;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <img src="logo.png" alt="Maverick PC Logo" />
-    <h1>Maverick PC</h1>
-
-    <div class="service">
-      <h2>Instalación de programas</h2>
-      <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
-    </div>
-
-    <div class="service">
-      <h2>Reparación de PCs</h2>
-      <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverte el rendimiento a tu equipo.</p>
-    </div>
-
-    <div class="service">
-      <h2>Arreglos técnicos</h2>
-      <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
-    </div>
-
-    <div class="service">
-      <h2>Asistencia remota a todo el mundo</h2>
-      <p>Gracias a herramientas como AnyDesk, podemos conectarnos a tu equipo desde cualquier parte del mundo y brindarte soporte técnico o instalación de software sin complicaciones.</p>
-    </div>
-
-    <a href="https://wa.me/5492215483353" target="_blank">
-      <button class="whatsapp">¡Escribinos por WhatsApp!</button>
-    </a>
-
-    <div class="reviews-section">
-      <h2>Reseñas</h2>
-
-      <div id="reviewsContainer"></div>
-
-      <input type="text" id="reviewerName" placeholder="Tu nombre" required />
-      <textarea id="reviewText" rows="3" placeholder="Escribí tu reseña..." required></textarea>
-
-      <div class="star-input" id="starInput"></div>
-
-      <button onclick="addReview()">Enviar reseña</button>
-    </div>
-  </div>
-
-  <script>
-    const reviewsContainer = document.getElementById("reviewsContainer");
-    const reviewText = document.getElementById("reviewText");
-    const reviewerName = document.getElementById("reviewerName");
-    const starInput = document.getElementById("starInput");
-
-    let selectedRating = 0;
-
-    function renderStars() {
-      starInput.innerHTML = "";
-      for (let i = 1; i <= 5; i++) {
-        const star = document.createElement("span");
-        star.innerHTML = i <= selectedRating ? "★" : "☆";
-        star.className = i <= selectedRating ? "selected" : "";
-        star.onclick = () => {
-          selectedRating = i;
-          renderStars();
-        };
-        starInput.appendChild(star);
-      }
     }
 
-    function addReview() {
-      const name = reviewerName.value.trim();
-      const text = reviewText.value.trim();
-      if (!name || !text || selectedRating === 0) return;
-
-      const review = {
-        name,
-        text,
-        rating: selectedRating
-      };
-
-      const reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-      reviews.push(review);
-      localStorage.setItem("reviews", JSON.stringify(reviews));
-
-      reviewerName.value = "";
-      reviewText.value = "";
-      selectedRating = 0;
-      renderStars();
-      renderReviews();
+    .service {
+      background-color: #1e293b;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      padding: 15px;
+      text-align: left;
     }
 
-    function renderReviews() {
-      const reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-      reviewsContainer.innerHTML = reviews.map(r => `
-        <div class="review">
-          <strong>${r.name}</strong>
-          <div class="stars">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
-          <p>${r.text}</p>
-        </div>
-      `).join("");
-    }
+    .whatsapp-button {
+      background-color: #25d366;
+      color: #fff;
+      bor
 
-    renderStars();
-    renderReviews();
-  </script>
-</body>
 </html>
 
