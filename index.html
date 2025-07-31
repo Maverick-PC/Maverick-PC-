@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maverick PC</title>
-  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="icon" href="logo.png" type="image/png" />
   <style>
     body {
       margin: 0;
@@ -13,14 +13,17 @@
       color: white;
       text-align: center;
     }
+
     img {
       max-width: 200px;
       margin-top: 20px;
     }
+
     h1 {
       font-size: 2.5em;
       margin-bottom: 10px;
     }
+
     .service {
       background-color: #1b2e4b;
       margin: 20px auto;
@@ -30,6 +33,7 @@
       max-width: 600px;
       text-align: left;
     }
+
     .whatsapp-button {
       background-color: #25D366;
       color: white;
@@ -42,6 +46,7 @@
       text-decoration: none;
       display: inline-block;
     }
+
     .reviews-section {
       background-color: #14253d;
       margin: 40px auto;
@@ -50,9 +55,7 @@
       width: 90%;
       max-width: 700px;
     }
-    .reviews-section h2 {
-      margin-bottom: 10px;
-    }
+
     .review {
       background-color: #1f3554;
       margin: 10px 0;
@@ -60,6 +63,7 @@
       border-radius: 8px;
       text-align: left;
     }
+
     input, textarea, select, button {
       font-family: inherit;
       font-size: 1em;
@@ -70,6 +74,7 @@
       width: 100%;
       max-width: 600px;
     }
+
     button.submit-button {
       background-color: #2c74f2;
       color: white;
@@ -78,6 +83,60 @@
       margin-top: 12px;
     }
   </style>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjHQGZsc8E9N4pjphjVR_IgnBN1xicFC0",
+      authDomain: "maverick-pc.firebaseapp.com",
+      projectId: "maverick-pc",
+      storageBucket: "maverick-pc.firebasestorage.app",
+      messagingSenderId: "635412742148",
+      appId: "1:635412742148:web:c3b9b67954d0933f74f551"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const reviewsContainer = document.getElementById("reviewsContainer");
+      const reviewForm = document.getElementById("reviewForm");
+
+      async function loadReviews() {
+        reviewsContainer.innerHTML = "";
+        const querySnapshot = await getDocs(collection(db, "reviews"));
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          displayReview(data.name, data.comment, data.rating);
+        });
+      }
+
+      function displayReview(name, comment, rating) {
+        const div = document.createElement("div");
+        div.classList.add("review");
+        div.innerHTML = `<strong>${name}</strong><br>${'⭐'.repeat(rating)}<br>${comment}`;
+        reviewsContainer.appendChild(div);
+      }
+
+      reviewForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("nameInput").value.trim();
+        const comment = document.getElementById("commentInput").value.trim();
+        const rating = parseInt(document.getElementById("ratingInput").value);
+
+        if (!name || !comment || !rating) return;
+
+        await addDoc(collection(db, "reviews"), { name, comment, rating });
+        displayReview(name, comment, rating);
+        reviewForm.reset();
+      });
+
+      loadReviews();
+    });
+  </script>
 </head>
 
 <body>
@@ -123,40 +182,7 @@
       <button type="submit" class="submit-button">Enviar reseña</button>
     </form>
   </div>
-
-  <script>
-    const reviewsContainer = document.getElementById('reviewsContainer');
-    const reviewForm = document.getElementById('reviewForm');
-
-    let storedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
-
-    storedReviews = storedReviews.filter(r => r.name && r.comment && r.rating); // Filtrar vacíos
-    storedReviews.forEach(displayReview);
-
-    reviewForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const name = document.getElementById('nameInput').value.trim();
-      const comment = document.getElementById('commentInput').value.trim();
-      const rating = document.getElementById('ratingInput').value;
-
-      if (!name || !comment || !rating) return;
-
-      const review = { name, comment, rating };
-      storedReviews.push(review);
-      localStorage.setItem('reviews', JSON.stringify(storedReviews));
-      displayReview(review);
-      reviewForm.reset();
-    });
-
-    function displayReview({ name, comment, rating }) {
-      const div = document.createElement('div');
-      div.classList.add('review');
-      div.innerHTML = `<strong>${name}</strong><br>${'⭐'.repeat(rating)}<br>${comment}`;
-      reviewsContainer.appendChild(div);
-    }
-  </script>
 </body>
 </html>
-
 
 
