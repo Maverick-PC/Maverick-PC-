@@ -80,14 +80,14 @@
       filter: brightness(1.1);
     }
     .reviews-section {
+      position: relative;
       background-color: #14253d;
-      margin-top: 60px;
-      padding: 20px;
+      margin: 60px auto;
+      padding: 20px 70px;
       border-radius: 10px;
       width: 90%;
       max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
+      text-align: center;
     }
     .review {
       background-color: #1f3554;
@@ -113,24 +113,10 @@
       cursor: pointer;
       margin-top: 12px;
     }
-
-    /* GALERÍA y FAQ ocultas por defecto */
-    .gallery, .faq {
-      display: none;
-    }
-
-    /* Botones para galería y FAQ separados a lados */
-    .bottom-buttons {
-      position: fixed;
-      bottom: 80px; /* arriba de botones flotantes */
-      width: 100%;
-      pointer-events: none; /* para que el contenedor no bloquee clicks */
-      z-index: 1000;
-    }
-    .bottom-buttons button {
-      pointer-events: auto; /* para que los botones sí respondan */
-      position: fixed;
-      bottom: 80px;
+    .side-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       background-color: #2c74f2;
       color: white;
       border: none;
@@ -141,19 +127,23 @@
       font-family: 'Poppins', sans-serif;
       transition: background-color 0.3s;
       max-width: 150px;
+      white-space: nowrap;
+      z-index: 1200;
     }
-    .bottom-buttons button.left {
-      left: 15px;
-    }
-    .bottom-buttons button.right {
-      right: 15px;
-    }
-    .bottom-buttons button:hover {
+    .side-button:hover {
       background-color: #1a4fbb;
     }
-
+    .side-button.left {
+      left: 10px;
+    }
+    .side-button.right {
+      right: 10px;
+    }
+    .gallery, .faq {
+      display: none;
+    }
     .gallery {
-      display: flex; /* para que funcione bien al mostrar */
+      display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
@@ -165,7 +155,6 @@
       max-width: 200px;
       border-radius: 10px;
     }
-
     .faq {
       max-width: 700px;
       margin: 40px auto;
@@ -180,28 +169,13 @@
       color: #ffe600;
     }
   </style>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBjHQGZsc8E9N4pjphjVR_IgnBN1xicFC0",
-      authDomain: "maverick-pc.firebaseapp.com",
-      projectId: "maverick-pc",
-      storageBucket: "maverick-pc.firebasestorage.app",
-      messagingSenderId: "635412742148",
-      appId: "1:635412742148:web:c3b9b67954d0933f74f551"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.addEventListener("DOMContentLoaded", async () => {
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
       const sections = document.querySelectorAll('.description-section');
-      const reviewsContainer = document.getElementById("reviewsContainer");
-      const ratingSummary = document.getElementById("ratingSummary");
-      const reviewForm = document.getElementById("reviewForm");
+      const gallery = document.querySelector('.gallery');
+      const faq = document.querySelector('.faq');
+      const btnGallery = document.getElementById('toggleGallery');
+      const btnFaq = document.getElementById('toggleFaq');
 
       document.querySelectorAll(".nav-button").forEach(button => {
         button.addEventListener("click", () => {
@@ -212,66 +186,23 @@
         });
       });
 
-      async function loadReviews() {
-        reviewsContainer.innerHTML = "<p>Cargando reseñas...</p>";
-        try {
-          const querySnapshot = await getDocs(collection(db, "reviews"));
-          reviewsContainer.innerHTML = "";
-          let total = 0;
-          let count = 0;
-          if (querySnapshot.empty) {
-            reviewsContainer.innerHTML = "<p>No hay reseñas aún. ¡Sé el primero en dejar una!</p>";
-          } else {
-            querySnapshot.forEach((doc) => {
-              const data = doc.data();
-              displayReview(data.name, data.comment, data.rating);
-              total += data.rating;
-              count++;
-            });
-            const avg = (total / count).toFixed(1);
-            ratingSummary.innerText = `Valoración promedio: ${'⭐'.repeat(Math.round(avg))} ${avg} / 5 (basado en ${count} reseñas)`;
-          }
-        } catch (error) {
-          reviewsContainer.innerHTML = "<p>Error al cargar reseñas.</p>";
-          console.error("Error leyendo reseñas:", error);
-        }
-      }
-
-      function displayReview(name, comment, rating) {
-        const div = document.createElement("div");
-        div.classList.add("review");
-        div.innerHTML = `<strong>${name}</strong><br>${'⭐'.repeat(rating)}<br>${comment}`;
-        reviewsContainer.appendChild(div);
-      }
-
-      reviewForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const name = document.getElementById("nameInput").value.trim();
-        const comment = document.getElementById("commentInput").value.trim();
-        const rating = parseInt(document.getElementById("ratingInput").value);
-
-        if (!name || !comment || !rating) {
-          alert("Por favor, completá todos los campos.");
-          return;
-        }
-
-        try {
-          await addDoc(collection(db, "reviews"), { name, comment, rating });
-          displayReview(name, comment, rating);
-          reviewForm.reset();
-          loadReviews();
-        } catch (error) {
-          alert("Error al enviar la reseña.");
-          console.error("Error guardando reseña:", error);
-        }
+      btnGallery.addEventListener('click', () => {
+        gallery.style.display = (gallery.style.display === 'flex') ? 'none' : 'flex';
+        btnGallery.innerText = (gallery.style.display === 'flex') ? 'Ocultar galería' : 'Galería de trabajos';
+        if (gallery.style.display === 'flex') gallery.scrollIntoView({ behavior: 'smooth' });
       });
 
-      loadReviews();
+      btnFaq.addEventListener('click', () => {
+        faq.style.display = (faq.style.display === 'block') ? 'none' : 'block';
+        btnFaq.innerText = (faq.style.display === 'block') ? 'Ocultar preguntas' : 'Preguntas frecuentes';
+        if (faq.style.display === 'block') faq.scrollIntoView({ behavior: 'smooth' });
+      });
     });
   </script>
 </head>
 <body>
   <header>
+    <button class="nav-button" data-target="quienes">QUIÉNES SOMOS</button>
     <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
     <button class="nav-button" data-target="arreglos">ARREGLOS TÉCNICOS</button>
     <button class="nav-button" data-target="reparacion">REPARACIÓN DE PCS</button>
@@ -279,6 +210,10 @@
   </header>
 
   <img id="logo" src="logo.png" alt="Maverick PC Logo">
+
+  <div id="quienes" class="description-section">
+    <p>Maverick PC es un emprendimiento familiar con más de 10 años de experiencia. Nos dedicamos con compromiso y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios que ofrecemos.</p>
+  </div>
 
   <div id="remota" class="description-section active">
     <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
@@ -293,10 +228,26 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
-  <!-- BOTONES ABAJO SEPARADOS -->
-  <div class="bottom-buttons">
-    <button id="toggleGallery" class="left">Galería de trabajos</button>
-    <button id="toggleFaq" class="right">Preguntas frecuentes</button>
+  <div class="reviews-section">
+    <button id="toggleGallery" class="side-button left">Galería de trabajos</button>
+    <button id="toggleFaq" class="side-button right">Preguntas frecuentes</button>
+
+    <h2>Reseñas de clientes</h2>
+    <p id="ratingSummary" class="rating-summary"></p>
+    <div id="reviewsContainer"></div>
+    <form id="reviewForm">
+      <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
+      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br>
+      <label for="ratingInput">Puntaje:</label>
+      <select id="ratingInput" required>
+        <option value="5">🌟🌟🌟🌟🌟</option>
+        <option value="4">🌟🌟🌟🌟</option>
+        <option value="3">🌟🌟🌟</option>
+        <option value="2">🌟🌟</option>
+        <option value="1">🌟</option>
+      </select><br>
+      <button type="submit" class="submit-button">Enviar reseña</button>
+    </form>
   </div>
 
   <div class="gallery">
@@ -325,65 +276,5 @@
     <a class="instagram" href="https://www.instagram.com/maverickpc.lp/" target="_blank">Instagram</a>
     <a href="https://wa.me/5492215483353" target="_blank">WhatsApp</a>
   </div>
-
-  <div class="reviews-section">
-    <h2>Reseñas de clientes</h2>
-    <p id="ratingSummary" class="rating-summary"></p>
-    <div id="reviewsContainer"></div>
-    <form id="reviewForm">
-      <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
-      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br>
-      <label for="ratingInput">Puntaje:</label>
-      <select id="ratingInput" required>
-        <option value="5">⭐⭐⭐⭐⭐</option>
-        <option value="4">⭐⭐⭐⭐</option>
-        <option value="3">⭐⭐⭐</option>
-        <option value="2">⭐⭐</option>
-        <option value="1">⭐</option>
-      </select><br>
-      <button type="submit" class="submit-button">Enviar reseña</button>
-    </form>
-  </div>
-
-  <script>
-    // Script para alternar visibilidad de galería y FAQ
-    document.addEventListener('DOMContentLoaded', () => {
-      const gallery = document.querySelector('.gallery');
-      const faq = document.querySelector('.faq');
-      const btnGallery = document.getElementById('toggleGallery');
-      const btnFaq = document.getElementById('toggleFaq');
-
-      btnGallery.addEventListener('click', () => {
-        if (gallery.style.display === 'flex') {
-          gallery.style.display = 'none';
-          btnGallery.innerText = 'Galería de trabajos';
-        } else {
-          gallery.style.display = 'flex';
-          btnGallery.innerText = 'Ocultar galería';
-          if (faq.style.display === 'block') {
-            faq.style.display = 'none';
-            btnFaq.innerText = 'Preguntas frecuentes';
-          }
-          gallery.scrollIntoView({behavior: 'smooth'});
-        }
-      });
-
-      btnFaq.addEventListener('click', () => {
-        if (faq.style.display === 'block') {
-          faq.style.display = 'none';
-          btnFaq.innerText = 'Preguntas frecuentes';
-        } else {
-          faq.style.display = 'block';
-          btnFaq.innerText = 'Ocultar preguntas';
-          if (gallery.style.display === 'flex') {
-            gallery.style.display = 'none';
-            btnGallery.innerText = 'Galería de trabajos';
-          }
-          faq.scrollIntoView({behavior: 'smooth'});
-        }
-      });
-    });
-  </script>
-
 </body>
 </html>
