@@ -62,6 +62,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      z-index: 1100;
     }
     .floating-buttons a {
       background-color: #25D366;
@@ -112,8 +113,39 @@
       cursor: pointer;
       margin-top: 12px;
     }
-    .gallery {
+
+    /* GALERÍA y FAQ ocultas por defecto */
+    .gallery, .faq {
+      display: none;
+    }
+
+    /* Botones para galería y FAQ */
+    .bottom-buttons {
+      position: fixed;
+      bottom: 80px; /* arriba de los botones flotantes */
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
+      gap: 15px;
+      z-index: 1000;
+    }
+    .bottom-buttons button {
+      background-color: #2c74f2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.3s;
+    }
+    .bottom-buttons button:hover {
+      background-color: #1a4fbb;
+    }
+
+    .gallery {
+      display: flex; /* para que funcione bien al mostrar */
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
@@ -125,12 +157,13 @@
       max-width: 200px;
       border-radius: 10px;
     }
+
     .faq {
       max-width: 700px;
       margin: 40px auto;
       text-align: left;
     }
-    .faq h3 {
+    .faq h2, .faq h3 {
       color: #70c7ff;
     }
     .rating-summary {
@@ -252,6 +285,12 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
+  <!-- BOTONES ABAJO PARA GALERÍA Y FAQ -->
+  <div class="bottom-buttons">
+    <button id="toggleGallery">Galería de trabajos</button>
+    <button id="toggleFaq">Preguntas frecuentes</button>
+  </div>
+
   <div class="gallery">
     <img src="galeria/trabajo1.jpg" alt="Trabajo 1">
     <img src="galeria/trabajo2.jpg" alt="Trabajo 2">
@@ -297,5 +336,46 @@
       <button type="submit" class="submit-button">Enviar reseña</button>
     </form>
   </div>
+
+  <script>
+    // Script para alternar visibilidad de galería y FAQ
+    document.addEventListener('DOMContentLoaded', () => {
+      const gallery = document.querySelector('.gallery');
+      const faq = document.querySelector('.faq');
+      const btnGallery = document.getElementById('toggleGallery');
+      const btnFaq = document.getElementById('toggleFaq');
+
+      btnGallery.addEventListener('click', () => {
+        if (gallery.style.display === 'flex') {
+          gallery.style.display = 'none';
+          btnGallery.innerText = 'Galería de trabajos';
+        } else {
+          gallery.style.display = 'flex';
+          btnGallery.innerText = 'Ocultar galería';
+          if (faq.style.display === 'block') {
+            faq.style.display = 'none';
+            btnFaq.innerText = 'Preguntas frecuentes';
+          }
+          gallery.scrollIntoView({behavior: 'smooth'});
+        }
+      });
+
+      btnFaq.addEventListener('click', () => {
+        if (faq.style.display === 'block') {
+          faq.style.display = 'none';
+          btnFaq.innerText = 'Preguntas frecuentes';
+        } else {
+          faq.style.display = 'block';
+          btnFaq.innerText = 'Ocultar preguntas';
+          if (gallery.style.display === 'flex') {
+            gallery.style.display = 'none';
+            btnGallery.innerText = 'Galería de trabajos';
+          }
+          faq.scrollIntoView({behavior: 'smooth'});
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>
