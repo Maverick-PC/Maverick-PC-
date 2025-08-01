@@ -57,12 +57,12 @@
     }
     .floating-buttons {
       position: fixed;
-      right: 20px;
+      left: 20px;
       bottom: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      z-index: 1100;
+      z-index: 1000;
     }
     .floating-buttons a {
       background-color: #25D366;
@@ -80,14 +80,14 @@
       filter: brightness(1.1);
     }
     .reviews-section {
-      position: relative;
       background-color: #14253d;
-      margin: 60px auto;
-      padding: 20px 70px;
+      margin-top: 60px;
+      padding: 20px;
       border-radius: 10px;
       width: 90%;
       max-width: 700px;
-      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
     .review {
       background-color: #1f3554;
@@ -113,35 +113,6 @@
       cursor: pointer;
       margin-top: 12px;
     }
-    .side-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: #2c74f2;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-family: 'Poppins', sans-serif;
-      transition: background-color 0.3s;
-      max-width: 150px;
-      white-space: nowrap;
-      z-index: 1200;
-    }
-    .side-button:hover {
-      background-color: #1a4fbb;
-    }
-    .side-button.left {
-      left: 10px;
-    }
-    .side-button.right {
-      right: 10px;
-    }
-    .gallery, .faq {
-      display: none;
-    }
     .gallery {
       display: flex;
       flex-wrap: wrap;
@@ -160,7 +131,7 @@
       margin: 40px auto;
       text-align: left;
     }
-    .faq h2, .faq h3 {
+    .faq h3 {
       color: #70c7ff;
     }
     .rating-summary {
@@ -169,13 +140,28 @@
       color: #ffe600;
     }
   </style>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjHQGZsc8E9N4pjphjVR_IgnBN1xicFC0",
+      authDomain: "maverick-pc.firebaseapp.com",
+      projectId: "maverick-pc",
+      storageBucket: "maverick-pc.firebasestorage.app",
+      messagingSenderId: "635412742148",
+      appId: "1:635412742148:web:c3b9b67954d0933f74f551"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.addEventListener("DOMContentLoaded", async () => {
       const sections = document.querySelectorAll('.description-section');
-      const gallery = document.querySelector('.gallery');
-      const faq = document.querySelector('.faq');
-      const btnGallery = document.getElementById('toggleGallery');
-      const btnFaq = document.getElementById('toggleFaq');
+      const reviewsContainer = document.getElementById("reviewsContainer");
+      const ratingSummary = document.getElementById("ratingSummary");
+      const reviewForm = document.getElementById("reviewForm");
 
       document.querySelectorAll(".nav-button").forEach(button => {
         button.addEventListener("click", () => {
@@ -186,17 +172,61 @@
         });
       });
 
-      btnGallery.addEventListener('click', () => {
-        gallery.style.display = (gallery.style.display === 'flex') ? 'none' : 'flex';
-        btnGallery.innerText = (gallery.style.display === 'flex') ? 'Ocultar galería' : 'Galería de trabajos';
-        if (gallery.style.display === 'flex') gallery.scrollIntoView({ behavior: 'smooth' });
+      async function loadReviews() {
+        reviewsContainer.innerHTML = "<p>Cargando reseñas...</p>";
+        try {
+          const querySnapshot = await getDocs(collection(db, "reviews"));
+          reviewsContainer.innerHTML = "";
+          let total = 0;
+          let count = 0;
+          if (querySnapshot.empty) {
+            reviewsContainer.innerHTML = "<p>No hay reseñas aún. ¡Sé el primero en dejar una!</p>";
+          } else {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              displayReview(data.name, data.comment, data.rating);
+              total += data.rating;
+              count++;
+            });
+            const avg = (total / count).toFixed(1);
+            ratingSummary.innerText = `Valoración promedio: ${'⭐'.repeat(Math.round(avg))} ${avg} / 5 (basado en ${count} reseñas)`;
+          }
+        } catch (error) {
+          reviewsContainer.innerHTML = "<p>Error al cargar reseñas.</p>";
+          console.error("Error leyendo reseñas:", error);
+        }
+      }
+
+      function displayReview(name, comment, rating) {
+        const div = document.createElement("div");
+        div.classList.add("review");
+        div.innerHTML = `<strong>${name}</strong><br>${'⭐'.repeat(rating)}<br>${comment}`;
+        reviewsContainer.appendChild(div);
+      }
+
+      reviewForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("nameInput").value.trim();
+        const comment = document.getElementById("commentInput").value.trim();
+        const rating = parseInt(document.getElementById("ratingInput").value);
+
+        if (!name || !comment || !rating) {
+          alert("Por favor, completá todos los campos.");
+          return;
+        }
+
+        try {
+          await addDoc(collection(db, "reviews"), { name, comment, rating });
+          displayReview(name, comment, rating);
+          reviewForm.reset();
+          loadReviews();
+        } catch (error) {
+          alert("Error al enviar la reseña.");
+          console.error("Error guardando reseña:", error);
+        }
       });
 
-      btnFaq.addEventListener('click', () => {
-        faq.style.display = (faq.style.display === 'block') ? 'none' : 'block';
-        btnFaq.innerText = (faq.style.display === 'block') ? 'Ocultar preguntas' : 'Preguntas frecuentes';
-        if (faq.style.display === 'block') faq.scrollIntoView({ behavior: 'smooth' });
-      });
+      loadReviews();
     });
   </script>
 </head>
@@ -228,28 +258,6 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
-  <div class="reviews-section">
-    <button id="toggleGallery" class="side-button left">Galería de trabajos</button>
-    <button id="toggleFaq" class="side-button right">Preguntas frecuentes</button>
-
-    <h2>Reseñas de clientes</h2>
-    <p id="ratingSummary" class="rating-summary"></p>
-    <div id="reviewsContainer"></div>
-    <form id="reviewForm">
-      <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
-      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br>
-      <label for="ratingInput">Puntaje:</label>
-      <select id="ratingInput" required>
-        <option value="5">🌟🌟🌟🌟🌟</option>
-        <option value="4">🌟🌟🌟🌟</option>
-        <option value="3">🌟🌟🌟</option>
-        <option value="2">🌟🌟</option>
-        <option value="1">🌟</option>
-      </select><br>
-      <button type="submit" class="submit-button">Enviar reseña</button>
-    </form>
-  </div>
-
   <div class="gallery">
     <img src="galeria/trabajo1.jpg" alt="Trabajo 1">
     <img src="galeria/trabajo2.jpg" alt="Trabajo 2">
@@ -275,6 +283,25 @@
   <div class="floating-buttons">
     <a class="instagram" href="https://www.instagram.com/maverickpc.lp/" target="_blank">Instagram</a>
     <a href="https://wa.me/5492215483353" target="_blank">WhatsApp</a>
+  </div>
+
+  <div class="reviews-section">
+    <h2>Reseñas de clientes</h2>
+    <p id="ratingSummary" class="rating-summary"></p>
+    <div id="reviewsContainer"></div>
+    <form id="reviewForm">
+      <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
+      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br>
+      <label for="ratingInput">Puntaje:</label>
+      <select id="ratingInput" required>
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select><br>
+      <button type="submit" class="submit-button">Enviar reseña</button>
+    </form>
   </div>
 </body>
 </html>
