@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maverick PC</title>
+  <title>Maverick PC - Reparación de PCs en La Plata</title>
+  <meta name="description" content="Servicio de reparación de computadoras, asistencia remota, instalación de programas y más. Atención en La Plata y alrededores.">
   <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -111,6 +112,32 @@
       cursor: pointer;
       margin-top: 12px;
     }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 40px auto;
+      max-width: 700px;
+    }
+    .gallery img {
+      width: 100%;
+      max-width: 200px;
+      border-radius: 10px;
+    }
+    .faq {
+      max-width: 700px;
+      margin: 40px auto;
+      text-align: left;
+    }
+    .faq h3 {
+      color: #70c7ff;
+    }
+    .rating-summary {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #ffe600;
+    }
   </style>
 
   <script type="module">
@@ -132,6 +159,7 @@
     window.addEventListener("DOMContentLoaded", async () => {
       const sections = document.querySelectorAll('.description-section');
       const reviewsContainer = document.getElementById("reviewsContainer");
+      const ratingSummary = document.getElementById("ratingSummary");
       const reviewForm = document.getElementById("reviewForm");
 
       document.querySelectorAll(".nav-button").forEach(button => {
@@ -148,13 +176,19 @@
         try {
           const querySnapshot = await getDocs(collection(db, "reviews"));
           reviewsContainer.innerHTML = "";
+          let total = 0;
+          let count = 0;
           if (querySnapshot.empty) {
             reviewsContainer.innerHTML = "<p>No hay reseñas aún. ¡Sé el primero en dejar una!</p>";
           } else {
             querySnapshot.forEach((doc) => {
               const data = doc.data();
               displayReview(data.name, data.comment, data.rating);
+              total += data.rating;
+              count++;
             });
+            const avg = (total / count).toFixed(1);
+            ratingSummary.innerText = `Valoración promedio: ${'⭐'.repeat(Math.round(avg))} ${avg} / 5 (basado en ${count} reseñas)`;
           }
         } catch (error) {
           reviewsContainer.innerHTML = "<p>Error al cargar reseñas.</p>";
@@ -184,6 +218,7 @@
           await addDoc(collection(db, "reviews"), { name, comment, rating });
           displayReview(name, comment, rating);
           reviewForm.reset();
+          loadReviews();
         } catch (error) {
           alert("Error al enviar la reseña.");
           console.error("Error guardando reseña:", error);
@@ -217,6 +252,28 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
+  <div class="gallery">
+    <img src="galeria/trabajo1.jpg" alt="Trabajo 1">
+    <img src="galeria/trabajo2.jpg" alt="Trabajo 2">
+    <img src="galeria/trabajo3.jpg" alt="Trabajo 3">
+    <img src="galeria/trabajo4.jpg" alt="Trabajo 4">
+    <img src="galeria/trabajo5.jpg" alt="Trabajo 5">
+  </div>
+
+  <div class="faq">
+    <h2>Preguntas Frecuentes</h2>
+    <h3>¿Cómo funciona la asistencia remota?</h3>
+    <p>Usamos AnyDesk para acceder a tu PC de forma segura y ayudarte con instalaciones, problemas técnicos o configuraciones. No necesitás salir de tu casa.</p>
+    <h3>¿Cuánto tarda un trabajo?</h3>
+    <p>Entre 1 y 3 días, dependiendo de la urgencia y tipo de reparación.</p>
+    <h3>¿Trabajan con notebooks?</h3>
+    <p>Sí, trabajamos con todo tipo de notebooks y computadoras.</p>
+    <h3>¿Tienen repuestos?</h3>
+    <p>Contamos con proveedor confiable de repuestos. En caso de necesitar uno, se te avisa el tiempo estimado.</p>
+    <h3>¿Qué medios de pago aceptan?</h3>
+    <p>Transferencia bancaria (todos los bancos), billeteras virtuales (MercadoPago, Ualá, etc.) y efectivo.</p>
+  </div>
+
   <div class="floating-buttons">
     <a class="instagram" href="https://www.instagram.com/maverickpc.lp/" target="_blank">Instagram</a>
     <a href="https://wa.me/5492215483353" target="_blank">WhatsApp</a>
@@ -224,6 +281,7 @@
 
   <div class="reviews-section">
     <h2>Reseñas de clientes</h2>
+    <p id="ratingSummary" class="rating-summary"></p>
     <div id="reviewsContainer"></div>
     <form id="reviewForm">
       <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
