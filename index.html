@@ -5,57 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maverick PC</title>
   <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #0e1c2e;
       color: white;
       text-align: center;
     }
-
-    img {
+    header {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background-color: #122c4a;
+      padding: 15px;
+      flex-wrap: wrap;
+    }
+    header button {
+      background: none;
+      border: none;
+      color: #70c7ff;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    header button:hover {
+      color: #ffffff;
+    }
+    #logo {
       max-width: 200px;
-      margin-top: 20px;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-
-    .service {
-      background-color: #1b2e4b;
       margin: 20px auto;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 600px;
-      text-align: left;
     }
-
-    .whatsapp-button {
+    .description-section {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .description-section.active {
+      display: block;
+      opacity: 1;
+    }
+    .floating-buttons {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .floating-buttons a {
       background-color: #25D366;
       color: white;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      margin: 20px;
-      cursor: pointer;
+      padding: 10px 15px;
+      border-radius: 8px;
       text-decoration: none;
-      display: inline-block;
+      font-weight: bold;
+      transition: background-color 0.3s;
     }
-
+    .floating-buttons a.instagram {
+      background-color: #E1306C;
+    }
+    .floating-buttons a:hover {
+      filter: brightness(1.1);
+    }
     .reviews-section {
       background-color: #14253d;
-      margin: 40px auto;
+      margin-top: 60px;
       padding: 20px;
       border-radius: 10px;
       width: 90%;
       max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
     .review {
       background-color: #1f3554;
       margin: 10px 0;
@@ -63,8 +94,7 @@
       border-radius: 8px;
       text-align: left;
     }
-
-    input, textarea, select, button {
+    input, textarea, select, button.submit-button {
       font-family: inherit;
       font-size: 1em;
       padding: 8px;
@@ -74,7 +104,6 @@
       width: 100%;
       max-width: 600px;
     }
-
     button.submit-button {
       background-color: #2c74f2;
       color: white;
@@ -84,7 +113,6 @@
     }
   </style>
 
-  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -102,14 +130,22 @@
     const db = getFirestore(app);
 
     window.addEventListener("DOMContentLoaded", async () => {
+      const sections = document.querySelectorAll('.description-section');
       const reviewsContainer = document.getElementById("reviewsContainer");
       const reviewForm = document.getElementById("reviewForm");
+
+      document.querySelectorAll(".nav-button").forEach(button => {
+        button.addEventListener("click", () => {
+          sections.forEach(sec => sec.classList.remove("active"));
+          document.getElementById(button.dataset.target).classList.add("active");
+        });
+      });
 
       async function loadReviews() {
         reviewsContainer.innerHTML = "<p>Cargando reseñas...</p>";
         try {
           const querySnapshot = await getDocs(collection(db, "reviews"));
-          reviewsContainer.innerHTML = ""; // limpio antes de cargar
+          reviewsContainer.innerHTML = "";
           if (querySnapshot.empty) {
             reviewsContainer.innerHTML = "<p>No hay reseñas aún. ¡Sé el primero en dejar una!</p>";
           } else {
@@ -156,32 +192,33 @@
     });
   </script>
 </head>
-
 <body>
-  <img src="logo.png" alt="Maverick PC Logo">
-  <h1>Maverick PC</h1>
+  <header>
+    <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
+    <button class="nav-button" data-target="arreglos">ARREGLOS TÉCNICOS</button>
+    <button class="nav-button" data-target="reparacion">REPARACIÓN DE PCS</button>
+    <button class="nav-button" data-target="programas">INSTALACIÓN DE PROGRAMAS</button>
+  </header>
 
-  <div class="service">
-    <h3>Instalación de programas</h3>
+  <img id="logo" src="logo.png" alt="Maverick PC Logo">
+
+  <div id="remota" class="description-section active">
+    <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
+  </div>
+  <div id="arreglos" class="description-section">
+    <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
+  </div>
+  <div id="reparacion" class="description-section">
+    <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverle el rendimiento a tu equipo.</p>
+  </div>
+  <div id="programas" class="description-section">
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
-  <div class="service">
-    <h3>Reparación de PCs</h3>
-    <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverle el rendimiento a tu equipo.</p>
+  <div class="floating-buttons">
+    <a class="instagram" href="https://www.instagram.com/maverickpc.lp/" target="_blank">Instagram</a>
+    <a href="https://wa.me/5492215483353" target="_blank">WhatsApp</a>
   </div>
-
-  <div class="service">
-    <h3>Arreglos técnicos</h3>
-    <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
-  </div>
-
-  <div class="service">
-    <h3>Asistencia remota a todo el mundo</h3>
-    <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
-  </div>
-
-  <a href="https://wa.me/5492215483353" class="whatsapp-button" target="_blank">¡Escribinos por WhatsApp!</a>
 
   <div class="reviews-section">
     <h2>Reseñas de clientes</h2>
