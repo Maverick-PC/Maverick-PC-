@@ -119,17 +119,18 @@
       display: none;
     }
 
-    /* Botones para galería y FAQ */
+    /* Botones para galería y FAQ separados a lados */
     .bottom-buttons {
       position: fixed;
-      bottom: 80px; /* arriba de los botones flotantes */
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 15px;
+      bottom: 80px; /* arriba de botones flotantes */
+      width: 100%;
+      pointer-events: none; /* para que el contenedor no bloquee clicks */
       z-index: 1000;
     }
     .bottom-buttons button {
+      pointer-events: auto; /* para que los botones sí respondan */
+      position: fixed;
+      bottom: 80px;
       background-color: #2c74f2;
       color: white;
       border: none;
@@ -139,6 +140,13 @@
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
       transition: background-color 0.3s;
+      max-width: 150px;
+    }
+    .bottom-buttons button.left {
+      left: 15px;
+    }
+    .bottom-buttons button.right {
+      right: 15px;
     }
     .bottom-buttons button:hover {
       background-color: #1a4fbb;
@@ -285,10 +293,10 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
-  <!-- BOTONES ABAJO PARA GALERÍA Y FAQ -->
+  <!-- BOTONES ABAJO SEPARADOS -->
   <div class="bottom-buttons">
-    <button id="toggleGallery">Galería de trabajos</button>
-    <button id="toggleFaq">Preguntas frecuentes</button>
+    <button id="toggleGallery" class="left">Galería de trabajos</button>
+    <button id="toggleFaq" class="right">Preguntas frecuentes</button>
   </div>
 
   <div class="gallery">
