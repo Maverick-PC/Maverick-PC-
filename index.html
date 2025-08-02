@@ -16,41 +16,39 @@
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      color: #111;
-      background-color: #888888; /* Gris neutro */
-    }
-    video#backgroundVideo {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      z-index: -1;
-      object-fit: cover;
-      background-color: white;
+      color: #80322b; /* marrón */
+      background-color: #80322b;
+      background-image: url('galeria/background-image.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100%;
+      overflow-x: hidden;
     }
     header {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      background-color: #f0f0f0ee;
+      background-color: rgba(128, 50, 43, 0.5); /* gris/marrón desvanecido */
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       padding: 15px;
       flex-wrap: wrap;
     }
     header button {
       background: none;
       border: none;
-      color: #007BFF;
+      color: #80322b;
       font-weight: bold;
       font-size: 1em;
       cursor: pointer;
       transition: color 0.3s;
     }
     header button:hover {
-      color: #000000;
+      color: #4d1f17; /* más oscuro al hover */
     }
     #logo {
-      max-width: 280px; /* Más grande */
+      max-width: 280px; /* más grande */
       margin: 20px auto;
       display: block;
     }
@@ -60,6 +58,9 @@
       padding: 20px;
       display: none;
       opacity: 0;
+      background-color: rgba(255, 255, 255, 0.8); /* semitransparente para legibilidad */
+      color: #80322b;
+      border-radius: 12px;
       transition: opacity 0.6s ease;
     }
     .description-section.active {
@@ -71,8 +72,9 @@
       margin: 60px auto;
       text-align: center;
       padding: 20px;
-      background-color: #ffffffcc;
+      background-color: rgba(255, 255, 255, 0.8);
       border-radius: 12px;
+      color: #80322b;
     }
     .carousel {
       position: relative;
@@ -89,7 +91,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(128, 50, 43, 0.7);
       color: white;
       border: none;
       font-size: 20px;
@@ -103,33 +105,29 @@
     .faq {
       max-width: 700px;
       margin: 40px auto;
-      padding: 20px;
+      padding: 0 20px;
       text-align: left;
-      background: rgba(255 255 255 / 0.15);
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #80322b;
       border-radius: 12px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .faq h3 {
-      color: #007BFF;
+      color: #80322b;
     }
 
     .reviews-section {
-      background: rgba(255 255 255 / 0.15);
+      background-color: rgba(255, 255, 255, 0.9);
       margin-top: 60px;
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 10px;
       width: 90%;
       max-width: 700px;
       margin-left: auto;
       margin-right: auto;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      color: #80322b;
     }
     .review {
-      background-color: #e0e0e0;
+      background-color: #f0e5e2;
       margin: 10px 0;
       padding: 10px;
       border-radius: 8px;
@@ -184,11 +182,6 @@
   </style>
 </head>
 <body>
-  <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="fondo.mp4" type="video/mp4">
-    Tu navegador no soporta video de fondo.
-  </video>
-
   <header>
     <button class="nav-button" data-target="quienes">QUIÉNES SOMOS</button>
     <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
