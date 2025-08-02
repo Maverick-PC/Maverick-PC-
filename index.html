@@ -19,9 +19,9 @@
       color: #80322b;
       background-color: #80322b;
       background-image: url('galeria/background-image.jpg');
-      background-size: cover;
-      background-position: center;
       background-repeat: no-repeat;
+      background-position: center top;
+      background-size: contain;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -54,7 +54,7 @@
     }
     #logo {
       max-width: 280px;
-      margin: 90px auto 40px auto; /* espacio para no quedar debajo del header */
+      margin: 90px auto 40px auto;
       display: block;
       position: relative;
       z-index: 10;
@@ -105,7 +105,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background-color: rgba(128, 50, 43, 0.7);
+      background-color: rgba(0,0,0,0.5);
       color: white;
       border: none;
       font-size: 20px;
@@ -114,29 +114,27 @@
       border-radius: 50%;
       user-select: none;
     }
-    .carousel .prev {
-      left: -20px;
-    }
-    .carousel .next {
-      right: -20px;
-    }
+    .carousel .prev { left: -20px; }
+    .carousel .next { right: -20px; }
+
     .faq {
       max-width: 700px;
       margin: 40px auto;
-      padding: 20px;
+      padding: 0 20px;
       text-align: left;
       background-color: rgba(255, 255, 255, 0.85);
-      color: #80322b;
       border-radius: 12px;
+      color: #80322b;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
       position: relative;
       z-index: 5;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
     .faq h3 {
       color: #80322b;
     }
+
     .reviews-section {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.85);
       margin-top: 60px;
       padding: 20px;
       border-radius: 10px;
@@ -145,9 +143,9 @@
       margin-left: auto;
       margin-right: auto;
       color: #80322b;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
       position: relative;
       z-index: 5;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
     .review {
       background-color: #f0e5e2;
@@ -155,16 +153,15 @@
       padding: 10px;
       border-radius: 8px;
       text-align: left;
+      box-shadow: inset 0 0 6px rgba(128,50,43,0.1);
     }
     .rating-summary {
       font-weight: bold;
       margin-bottom: 15px;
       color: #FF9900;
+      font-size: 1.2em;
     }
-    input,
-    textarea,
-    select,
-    button.submit-button {
+    input, textarea, select, button.submit-button {
       font-family: inherit;
       font-size: 1em;
       padding: 8px;
@@ -173,7 +170,7 @@
       border: 1px solid #ccc;
       width: 100%;
       max-width: 600px;
-      box-sizing: border-box;
+      color: #80322b;
     }
     button.submit-button {
       background-color: #2c74f2;
@@ -200,7 +197,6 @@
       text-decoration: none;
       font-weight: bold;
       transition: background-color 0.3s;
-      user-select: none;
     }
     .floating-buttons a.instagram {
       background-color: #E1306C;
@@ -211,6 +207,7 @@
   </style>
 </head>
 <body>
+
   <header>
     <button class="nav-button" data-target="quienes">QUIÉNES SOMOS</button>
     <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
@@ -223,35 +220,20 @@
   <img id="logo" src="logo.png" alt="Maverick PC Logo" />
 
   <div id="quienes" class="description-section">
-    <p>
-      Maverick PC es un emprendimiento familiar con más de 10 años de experiencia. Nos dedicamos con compromiso
-      y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios
-      que ofrecemos.
-    </p>
+    <p>Maverick PC es un emprendimiento familiar con más de 10 años de experiencia. Nos dedicamos con compromiso y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios que ofrecemos.</p>
   </div>
 
   <div id="remota" class="description-section active">
-    <p>
-      A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.
-    </p>
+    <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
   </div>
   <div id="arreglos" class="description-section">
-    <p>
-      Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos
-      (impresoras, cámaras, micrófonos, etc.), conectividad y más.
-    </p>
+    <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
   </div>
   <div id="reparacion" class="description-section">
-    <p>
-      Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general
-      del sistema para devolverle el rendimiento a tu equipo.
-    </p>
+    <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverle el rendimiento a tu equipo.</p>
   </div>
   <div id="programas" class="description-section">
-    <p>
-      Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más.
-      Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.
-    </p>
+    <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
   <div id="trabajos" class="carousel-section description-section">
@@ -266,25 +248,20 @@
   <div class="faq">
     <h2>Preguntas Frecuentes</h2>
     <h3>¿Cómo funciona la asistencia remota?</h3>
-    <p>
-      Usamos AnyDesk para acceder a tu PC de forma segura y ayudarte con instalaciones, problemas técnicos o configuraciones.
-      No necesitás salir de tu casa.
-    </p>
+    <p>Usamos AnyDesk para acceder a tu PC de forma segura y ayudarte con instalaciones, problemas técnicos o configuraciones. No necesitás salir de tu casa.</p>
     <h3>¿Cuánto tarda un trabajo?</h3>
     <p>Entre 1 y 3 días, dependiendo de la urgencia y tipo de reparación.</p>
     <h3>¿Trabajan con notebooks?</h3>
     <p>Sí, trabajamos con todo tipo de notebooks y computadoras.</p>
     <h3>¿Tienen repuestos?</h3>
-    <p>
-      Contamos con proveedor confiable de repuestos. En caso de necesitar uno, se te avisa el tiempo estimado.
-    </p>
+    <p>Contamos con proveedor confiable de repuestos. En caso de necesitar uno, se te avisa el tiempo estimado.</p>
     <h3>¿Qué medios de pago aceptan?</h3>
     <p>Transferencia bancaria (todos los bancos), billeteras virtuales (MercadoPago, Ualá, etc.) y efectivo.</p>
   </div>
 
   <div class="reviews-section">
     <h2>Reseñas de clientes</h2>
-    <p id="ratingSummary" class="rating-summary">⭐⭐⭐⭐⭐ 5.0</p>
+    <p id="ratingSummary" class="rating-summary"></p>
     <div id="reviewsContainer">
       <div class="review">
         <strong>Juan P.:</strong> Excelente servicio, me resolvieron el problema en el día. ¡Recomendadísimos!
@@ -311,56 +288,45 @@
   </div>
 
   <script>
+    // Navegación entre secciones
     const navButtons = document.querySelectorAll(".nav-button");
     const sections = document.querySelectorAll(".description-section");
 
-    navButtons.forEach(button => {
+    navButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        const targetId = button.getAttribute("data-target");
-
-        sections.forEach(section => {
-          if(section.id === targetId) {
-            section.classList.add("active");
-          } else {
-            section.classList.remove("active");
-          }
-        });
-
-        // Para que baje la vista a la sección cuando cambias pestaña
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-          const yOffset = -70; // para compensar header fijo
-          const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({top: y, behavior: 'smooth'});
-        }
+        const target = button.getAttribute("data-target");
+        sections.forEach((section) => section.classList.remove("active"));
+        document.getElementById(target).classList.add("active");
       });
     });
 
-    // Carrusel simple
-    const images = [
-      "galeria/trabajo1.jpg",
-      "galeria/trabajo2.jpg",
-      "galeria/trabajo3.jpg",
-      "galeria/trabajo4.jpg",
-      "galeria/trabajo5.jpg",
-      "galeria/trabajo6.jpg"
-    ];
-    let currentImageIndex = 0;
-    const carouselImage = document.getElementById("carouselImage");
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-      carouselImage.src = images[currentImageIndex];
-    });
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      currentImageIndex = (currentImageIndex + 1) % images.length;
-      carouselImage.src = images[currentImageIndex];
+    // Carrusel de trabajos
+    document.addEventListener("DOMContentLoaded", () => {
+      const images = [
+        "galeria/trabajo1.jpg",
+        "galeria/trabajo2.jpg",
+        "galeria/trabajo3.jpg",
+        "galeria/trabajo4.jpg",
+        "galeria/trabajo5.jpg",
+      ];
+      let index = 0;
+      const imgElement = document.getElementById("carouselImage");
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        index = (index + 1) % images.length;
+        imgElement.src = images[index];
+      });
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        index = (index - 1 + images.length) % images.length;
+        imgElement.src = images[index];
+      });
     });
 
-    // Reseñas
+    // Reseñas con promedio y total
     const reviewForm = document.getElementById("reviewForm");
     const reviewsContainer = document.getElementById("reviewsContainer");
     const ratingSummary = document.getElementById("ratingSummary");
 
+    // Función para actualizar el resumen de rating
     function updateRatingSummary() {
       const reviews = reviewsContainer.querySelectorAll(".review");
       if (reviews.length === 0) {
@@ -368,37 +334,52 @@
         return;
       }
       let total = 0;
-      reviews.forEach(r => {
-        const stars = r.getAttribute("data-rating");
-        total += parseInt(stars);
+      reviews.forEach((rev) => {
+        const stars = rev.getAttribute("data-rating");
+        if (stars) total += parseInt(stars);
       });
-      const avg = (total / reviews.length).toFixed(1);
-      const starsStr = "⭐".repeat(Math.round(avg));
-      ratingSummary.textContent = `${starsStr} ${avg}`;
+      // Si alguna reseña no tiene rating, se ignora
+      const validReviews = Array.from(reviews).filter(
+        (rev) => rev.getAttribute("data-rating")
+      ).length;
+      const avg = validReviews > 0 ? (total / validReviews).toFixed(1) : "0";
+      ratingSummary.textContent =
+        "⭐⭐⭐⭐⭐ ".slice(0, avg) + ` ${avg} (${reviews.length} reseñas)`;
     }
 
-    reviewForm.addEventListener("submit", e => {
+    // Carga inicial: asignar data-rating a reseñas existentes
+    window.onload = () => {
+      // Para la reseña preexistente, asignamos rating 5
+      const firstReview = reviewsContainer.querySelector(".review");
+      if (firstReview) firstReview.setAttribute("data-rating", "5");
+      updateRatingSummary();
+    };
+
+    // Manejo del envío del formulario
+    reviewForm.addEventListener("submit", (e) => {
       e.preventDefault();
+
       const name = document.getElementById("nameInput").value.trim();
       const comment = document.getElementById("commentInput").value.trim();
       const rating = document.getElementById("ratingInput").value;
 
-      if(!name || !comment || !rating) return;
+      if (!name || !comment || !rating) return;
 
-      const reviewDiv = document.createElement("div");
-      reviewDiv.classList.add("review");
-      reviewDiv.setAttribute("data-rating", rating);
-      reviewDiv.innerHTML = `<strong>${name}:</strong> ${comment}`;
+      // Crear nuevo div reseña
+      const newReview = document.createElement("div");
+      newReview.classList.add("review");
+      newReview.setAttribute("data-rating", rating);
+      newReview.innerHTML = `<strong>${name}:</strong> ${comment}`;
 
-      reviewsContainer.appendChild(reviewDiv);
+      // Agregar al contenedor
+      reviewsContainer.appendChild(newReview);
+
+      // Actualizar resumen
       updateRatingSummary();
 
+      // Reset form
       reviewForm.reset();
-      alert("¡Gracias por tu reseña!");
     });
-
-    // Actualizo resumen al cargar página para la reseña fija
-    updateRatingSummary();
   </script>
 </body>
 </html>
