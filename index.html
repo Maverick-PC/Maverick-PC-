@@ -18,14 +18,29 @@
       background-color: #0e1c2e;
       color: white;
       text-align: center;
+      position: relative;
+      z-index: 0;
+    }
+    /* Video de fondo */
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      pointer-events: none;
     }
     header {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      background-color: #122c4a;
+      background-color: rgba(18, 44, 74, 0.8);
       padding: 15px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
     }
     header button {
       background: none;
@@ -42,6 +57,8 @@
     #logo {
       max-width: 200px;
       margin: 20px auto;
+      position: relative;
+      z-index: 1;
     }
     .description-section {
       max-width: 700px;
@@ -50,6 +67,8 @@
       display: none;
       opacity: 0;
       transition: opacity 0.6s ease;
+      position: relative;
+      z-index: 1;
     }
     .description-section.active {
       display: block;
@@ -80,7 +99,7 @@
       filter: brightness(1.1);
     }
     .reviews-section {
-      background-color: #14253d;
+      background-color: rgba(20, 37, 61, 0.9);
       margin-top: 60px;
       padding: 20px;
       border-radius: 10px;
@@ -88,9 +107,11 @@
       max-width: 700px;
       margin-left: auto;
       margin-right: auto;
+      position: relative;
+      z-index: 1;
     }
     .review {
-      background-color: #1f3554;
+      background-color: rgba(31, 53, 84, 0.9);
       margin: 10px 0;
       padding: 10px;
       border-radius: 8px;
@@ -113,23 +134,43 @@
       cursor: pointer;
       margin-top: 12px;
     }
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
+    .carousel {
+      position: relative;
+      width: 90%;
+      max-width: 600px;
       margin: 40px auto;
-      max-width: 700px;
+      z-index: 1;
     }
-    .gallery img {
+    .carousel img {
       width: 100%;
-      max-width: 200px;
+      height: auto;
       border-radius: 10px;
+    }
+    .carousel .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 2;
+    }
+    .carousel .prev {
+      left: 10px;
+    }
+    .carousel .next {
+      right: 10px;
     }
     .faq {
       max-width: 700px;
       margin: 40px auto;
       text-align: left;
+      position: relative;
+      z-index: 1;
     }
     .faq h3 {
       color: #70c7ff;
@@ -138,99 +179,40 @@
       font-weight: bold;
       margin-bottom: 15px;
       color: #ffe600;
+      position: relative;
+      z-index: 1;
     }
   </style>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBjHQGZsc8E9N4pjphjVR_IgnBN1xicFC0",
-      authDomain: "maverick-pc.firebaseapp.com",
-      projectId: "maverick-pc",
-      storageBucket: "maverick-pc.firebasestorage.app",
-      messagingSenderId: "635412742148",
-      appId: "1:635412742148:web:c3b9b67954d0933f74f551"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.addEventListener("DOMContentLoaded", async () => {
-      const sections = document.querySelectorAll('.description-section');
-      const reviewsContainer = document.getElementById("reviewsContainer");
-      const ratingSummary = document.getElementById("ratingSummary");
-      const reviewForm = document.getElementById("reviewForm");
-
-      document.querySelectorAll(".nav-button").forEach(button => {
-        button.addEventListener("click", () => {
-          sections.forEach(sec => sec.classList.remove("active"));
-          const target = document.getElementById(button.dataset.target);
-          target.classList.add("active");
-          target.scrollIntoView({ behavior: 'smooth' });
-        });
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const images = [
+        'galeria/trabajo1.jpg',
+        'galeria/trabajo2.jpg',
+        'galeria/trabajo3.jpg',
+        'galeria/trabajo4.jpg',
+        'galeria/trabajo5.jpg'
+      ];
+      let index = 0;
+      const imgElement = document.getElementById('carouselImage');
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        index = (index + 1) % images.length;
+        imgElement.src = images[index];
       });
-
-      async function loadReviews() {
-        reviewsContainer.innerHTML = "<p>Cargando reseñas...</p>";
-        try {
-          const querySnapshot = await getDocs(collection(db, "reviews"));
-          reviewsContainer.innerHTML = "";
-          let total = 0;
-          let count = 0;
-          if (querySnapshot.empty) {
-            reviewsContainer.innerHTML = "<p>No hay reseñas aún. ¡Sé el primero en dejar una!</p>";
-          } else {
-            querySnapshot.forEach((doc) => {
-              const data = doc.data();
-              displayReview(data.name, data.comment, data.rating);
-              total += data.rating;
-              count++;
-            });
-            const avg = (total / count).toFixed(1);
-            ratingSummary.innerText = `Valoración promedio: ${'⭐'.repeat(Math.round(avg))} ${avg} / 5 (basado en ${count} reseñas)`;
-          }
-        } catch (error) {
-          reviewsContainer.innerHTML = "<p>Error al cargar reseñas.</p>";
-          console.error("Error leyendo reseñas:", error);
-        }
-      }
-
-      function displayReview(name, comment, rating) {
-        const div = document.createElement("div");
-        div.classList.add("review");
-        div.innerHTML = `<strong>${name}</strong><br>${'⭐'.repeat(rating)}<br>${comment}`;
-        reviewsContainer.appendChild(div);
-      }
-
-      reviewForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const name = document.getElementById("nameInput").value.trim();
-        const comment = document.getElementById("commentInput").value.trim();
-        const rating = parseInt(document.getElementById("ratingInput").value);
-
-        if (!name || !comment || !rating) {
-          alert("Por favor, completá todos los campos.");
-          return;
-        }
-
-        try {
-          await addDoc(collection(db, "reviews"), { name, comment, rating });
-          displayReview(name, comment, rating);
-          reviewForm.reset();
-          loadReviews();
-        } catch (error) {
-          alert("Error al enviar la reseña.");
-          console.error("Error guardando reseña:", error);
-        }
+      document.getElementById('prevBtn').addEventListener('click', () => {
+        index = (index - 1 + images.length) % images.length;
+        imgElement.src = images[index];
       });
-
-      loadReviews();
     });
   </script>
 </head>
 <body>
+
+  <!-- Video de fondo -->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="galeria/fondo.mp4" type="video/mp4" />
+    Tu navegador no soporta video HTML5.
+  </video>
+
   <header>
     <button class="nav-button" data-target="quienes">QUIÉNES SOMOS</button>
     <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
@@ -242,7 +224,7 @@
   <img id="logo" src="logo.png" alt="Maverick PC Logo">
 
   <div id="quienes" class="description-section">
-    <p>Maverick PC es un emprendimiento familiar con más de 20 años de experiencia. Nos dedicamos con compromiso y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios que ofrecemos.</p>
+    <p>Maverick PC es un emprendimiento familiar con más de 10 años de experiencia. Nos dedicamos con compromiso y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios que ofrecemos.</p>
   </div>
 
   <div id="remota" class="description-section active">
@@ -258,12 +240,10 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
-  <div class="gallery">
-    <img src="galeria/trabajo1.jpg" alt="Trabajo 1">
-    <img src="galeria/trabajo2.jpg" alt="Trabajo 2">
-    <img src="galeria/trabajo3.jpg" alt="Trabajo 3">
-    <img src="galeria/trabajo4.jpg" alt="Trabajo 4">
-    <img src="galeria/trabajo5.jpg" alt="Trabajo 5">
+  <div class="carousel">
+    <button class="arrow prev" id="prevBtn">❮</button>
+    <img id="carouselImage" src="galeria/trabajo1.jpg" alt="Trabajo realizado">
+    <button class="arrow next" id="nextBtn">❯</button>
   </div>
 
   <div class="faq">
@@ -305,5 +285,3 @@
   </div>
 </body>
 </html>
-
-
