@@ -53,7 +53,7 @@
       color: #4d1f17;
     }
     #logo {
-      max-width: 280px;
+      max-width: 400px;  /* Aumenté el tamaño máximo aquí */
       margin: 90px auto 40px auto;
       display: block;
       position: relative;
@@ -263,7 +263,7 @@
     <h2>Reseñas de clientes</h2>
     <p id="ratingSummary" class="rating-summary"></p>
     <div id="reviewsContainer">
-      <div class="review">
+      <div class="review" data-rating="5">
         <strong>Juan P.:</strong> Excelente servicio, me resolvieron el problema en el día. ¡Recomendadísimos!
       </div>
     </div>
@@ -338,20 +338,16 @@
         const stars = rev.getAttribute("data-rating");
         if (stars) total += parseInt(stars);
       });
-      // Si alguna reseña no tiene rating, se ignora
       const validReviews = Array.from(reviews).filter(
         (rev) => rev.getAttribute("data-rating")
       ).length;
       const avg = validReviews > 0 ? (total / validReviews).toFixed(1) : "0";
       ratingSummary.textContent =
-        "⭐⭐⭐⭐⭐ ".slice(0, avg) + ` ${avg} (${reviews.length} reseñas)`;
+        "⭐⭐⭐⭐⭐".slice(0, Math.round(avg)) + ` ${avg} (${reviews.length} reseñas)`;
     }
 
-    // Carga inicial: asignar data-rating a reseñas existentes
+    // Carga inicial: asignar data-rating a reseñas existentes y actualizar resumen
     window.onload = () => {
-      // Para la reseña preexistente, asignamos rating 5
-      const firstReview = reviewsContainer.querySelector(".review");
-      if (firstReview) firstReview.setAttribute("data-rating", "5");
       updateRatingSummary();
     };
 
@@ -383,7 +379,6 @@
   </script>
 </body>
 </html>
-
 
 
 
