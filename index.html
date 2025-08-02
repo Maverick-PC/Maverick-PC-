@@ -12,47 +12,55 @@
       box-sizing: border-box;
       scroll-behavior: smooth;
     }
-    body, html {
+    body {
       margin: 0;
-      padding: 0;
       font-family: 'Poppins', sans-serif;
-      color: #111;
+      color: black;
+      text-align: center;
+      background-color: transparent;
     }
+
     video#backgroundVideo {
       position: fixed;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      z-index: -1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      background-color: white;
+      z-index: -1;
     }
+
+    header, .description-section, .reviews-section, .faq {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
     header {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      background-color: #f0f0f0ee;
       padding: 15px;
       flex-wrap: wrap;
     }
+
     header button {
       background: none;
       border: none;
-      color: #007BFF;
+      color: #0e1c2e;
       font-weight: bold;
       font-size: 1em;
       cursor: pointer;
       transition: color 0.3s;
     }
+
     header button:hover {
-      color: #000000;
+      color: #70c7ff;
     }
+
     #logo {
       max-width: 200px;
       margin: 20px auto;
-      display: block;
     }
+
     .description-section {
       max-width: 700px;
       margin: 0 auto;
@@ -61,94 +69,12 @@
       opacity: 0;
       transition: opacity 0.6s ease;
     }
+
     .description-section.active {
       display: block;
       opacity: 1;
     }
-    .carousel-section {
-      max-width: 700px;
-      margin: 60px auto;
-      text-align: center;
-      padding: 20px;
-      background-color: #ffffffcc;
-      border-radius: 12px;
-    }
-    .carousel {
-      position: relative;
-      width: 90%;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    .carousel img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-    .carousel .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      font-size: 20px;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 50%;
-    }
-    .carousel .prev { left: -20px; }
-    .carousel .next { right: -20px; }
 
-    .faq {
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 0 20px;
-      text-align: left;
-      background-color: #ffffffcc;
-    }
-    .faq h3 {
-      color: #007BFF;
-    }
-
-    .reviews-section {
-      background-color: #f7f7f7dd;
-      margin-top: 60px;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .review {
-      background-color: #e0e0e0;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 8px;
-      text-align: left;
-    }
-    .rating-summary {
-      font-weight: bold;
-      margin-bottom: 15px;
-      color: #FF9900;
-    }
-    input, textarea, select, button.submit-button {
-      font-family: inherit;
-      font-size: 1em;
-      padding: 8px;
-      margin-top: 8px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      width: 100%;
-      max-width: 600px;
-    }
-    button.submit-button {
-      background-color: #2c74f2;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
-    }
     .floating-buttons {
       position: fixed;
       left: 20px;
@@ -158,6 +84,7 @@
       gap: 10px;
       z-index: 1000;
     }
+
     .floating-buttons a {
       background-color: #25D366;
       color: white;
@@ -167,132 +94,116 @@
       font-weight: bold;
       transition: background-color 0.3s;
     }
+
     .floating-buttons a.instagram {
       background-color: #E1306C;
     }
+
     .floating-buttons a:hover {
       filter: brightness(1.1);
+    }
+
+    .reviews-section {
+      margin-top: 60px;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .review {
+      background-color: #f2f2f2;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: left;
+      color: #000;
+    }
+
+    input, textarea, select, button.submit-button {
+      font-family: inherit;
+      font-size: 1em;
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    button.submit-button {
+      background-color: #2c74f2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .faq {
+      max-width: 700px;
+      margin: 40px auto;
+      text-align: left;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .faq h3 {
+      color: #0e1c2e;
+    }
+
+    .rating-summary {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #ffe600;
+    }
+
+    .carousel {
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      margin: 40px auto;
+    }
+
+    .carousel img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .carousel .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .carousel .prev {
+      left: 10px;
+    }
+
+    .carousel .next {
+      right: 10px;
     }
   </style>
 </head>
 <body>
   <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="fondo.mp4" type="video/mp4">
+    <source src="galeria/fondo.mp4" type="video/mp4">
     Tu navegador no soporta video de fondo.
   </video>
 
-  <header>
-    <button class="nav-button" data-target="quienes">QUIÉNES SOMOS</button>
-    <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
-    <button class="nav-button" data-target="arreglos">ARREGLOS TÉCNICOS</button>
-    <button class="nav-button" data-target="reparacion">REPARACIÓN DE PCS</button>
-    <button class="nav-button" data-target="programas">INSTALACIÓN DE PROGRAMAS</button>
-    <button class="nav-button" data-target="trabajos">NUESTROS TRABAJOS</button>
-  </header>
+  <!-- El resto de tu contenido HTML va aquí -->
 
-  <img id="logo" src="logo.png" alt="Maverick PC Logo">
-
-  <div id="quienes" class="description-section">
-    <p>Maverick PC es un emprendimiento familiar con más de 10 años de experiencia. Nos dedicamos con compromiso y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios que ofrecemos.</p>
-  </div>
-
-  <div id="remota" class="description-section active">
-    <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
-  </div>
-  <div id="arreglos" class="description-section">
-    <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
-  </div>
-  <div id="reparacion" class="description-section">
-    <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverle el rendimiento a tu equipo.</p>
-  </div>
-  <div id="programas" class="description-section">
-    <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
-  </div>
-
-  <div id="trabajos" class="carousel-section description-section">
-    <h2>Nuestros Trabajos</h2>
-    <div class="carousel">
-      <button class="arrow prev" id="prevBtn">❮</button>
-      <img id="carouselImage" src="galeria/trabajo1.jpg" alt="Trabajo realizado">
-      <button class="arrow next" id="nextBtn">❯</button>
-    </div>
-  </div>
-
-  <div class="faq">
-    <h2>Preguntas Frecuentes</h2>
-    <h3>¿Cómo funciona la asistencia remota?</h3>
-    <p>Usamos AnyDesk para acceder a tu PC de forma segura y ayudarte con instalaciones, problemas técnicos o configuraciones. No necesitás salir de tu casa.</p>
-    <h3>¿Cuánto tarda un trabajo?</h3>
-    <p>Entre 1 y 3 días, dependiendo de la urgencia y tipo de reparación.</p>
-    <h3>¿Trabajan con notebooks?</h3>
-    <p>Sí, trabajamos con todo tipo de notebooks y computadoras.</p>
-    <h3>¿Tienen repuestos?</h3>
-    <p>Contamos con proveedor confiable de repuestos. En caso de necesitar uno, se te avisa el tiempo estimado.</p>
-    <h3>¿Qué medios de pago aceptan?</h3>
-    <p>Transferencia bancaria (todos los bancos), billeteras virtuales (MercadoPago, Ualá, etc.) y efectivo.</p>
-  </div>
-
-  <div class="reviews-section">
-    <h2>Reseñas de clientes</h2>
-    <p id="ratingSummary" class="rating-summary">⭐⭐⭐⭐⭐ 5.0</p>
-    <div id="reviewsContainer">
-      <div class="review">
-        <strong>Juan P.:</strong> Excelente servicio, me resolvieron el problema en el día. ¡Recomendadísimos!
-      </div>
-    </div>
-    <form id="reviewForm">
-      <input type="text" id="nameInput" placeholder="Tu nombre" required><br>
-      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br>
-      <label for="ratingInput">Puntaje:</label>
-      <select id="ratingInput" required>
-        <option value="5">⭐⭐⭐⭐⭐</option>
-        <option value="4">⭐⭐⭐⭐</option>
-        <option value="3">⭐⭐⭐</option>
-        <option value="2">⭐⭐</option>
-        <option value="1">⭐</option>
-      </select><br>
-      <button type="submit" class="submit-button">Enviar reseña</button>
-    </form>
-  </div>
-
-  <div class="floating-buttons">
-    <a class="instagram" href="https://www.instagram.com/maverickpc.lp/" target="_blank">Instagram</a>
-    <a href="https://wa.me/5492215483353" target="_blank">WhatsApp</a>
-  </div>
-
-  <script>
-    const navButtons = document.querySelectorAll(".nav-button");
-    const sections = document.querySelectorAll(".description-section");
-
-    navButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        const target = button.getAttribute("data-target");
-        sections.forEach(section => section.classList.remove("active"));
-        document.getElementById(target).classList.add("active");
-      });
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const images = [
-        'galeria/trabajo1.jpg',
-        'galeria/trabajo2.jpg',
-        'galeria/trabajo3.jpg',
-        'galeria/trabajo4.jpg',
-        'galeria/trabajo5.jpg'
-      ];
-      let index = 0;
-      const imgElement = document.getElementById('carouselImage');
-      document.getElementById('nextBtn').addEventListener('click', () => {
-        index = (index + 1) % images.length;
-        imgElement.src = images[index];
-      });
-      document.getElementById('prevBtn').addEventListener('click', () => {
-        index = (index - 1 + images.length) % images.length;
-        imgElement.src = images[index];
-      });
-    });
-  </script>
 </body>
 </html>
+
 
 
