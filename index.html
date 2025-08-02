@@ -65,11 +65,19 @@
       display: block;
       opacity: 1;
     }
+    .carousel-section {
+      max-width: 700px;
+      margin: 60px auto;
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffffcc;
+      border-radius: 12px;
+    }
     .carousel {
       position: relative;
       width: 90%;
       max-width: 400px;
-      margin: 40px auto;
+      margin: 0 auto;
     }
     .carousel img {
       width: 100%;
@@ -179,6 +187,7 @@
     <button class="nav-button" data-target="arreglos">ARREGLOS TÉCNICOS</button>
     <button class="nav-button" data-target="reparacion">REPARACIÓN DE PCS</button>
     <button class="nav-button" data-target="programas">INSTALACIÓN DE PROGRAMAS</button>
+    <button class="nav-button" data-target="trabajos">NUESTROS TRABAJOS</button>
   </header>
 
   <img id="logo" src="logo.png" alt="Maverick PC Logo">
@@ -200,10 +209,13 @@
     <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
   </div>
 
-  <div class="carousel">
-    <button class="arrow prev" id="prevBtn">❮</button>
-    <img id="carouselImage" src="galeria/trabajo1.jpg" alt="Trabajo realizado">
-    <button class="arrow next" id="nextBtn">❯</button>
+  <div id="trabajos" class="carousel-section description-section">
+    <h2>Nuestros Trabajos</h2>
+    <div class="carousel">
+      <button class="arrow prev" id="prevBtn">❮</button>
+      <img id="carouselImage" src="galeria/trabajo1.jpg" alt="Trabajo realizado">
+      <button class="arrow next" id="nextBtn">❯</button>
+    </div>
   </div>
 
   <div class="faq">
@@ -249,6 +261,17 @@
   </div>
 
   <script>
+    const navButtons = document.querySelectorAll(".nav-button");
+    const sections = document.querySelectorAll(".description-section");
+
+    navButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const target = button.getAttribute("data-target");
+        sections.forEach(section => section.classList.remove("active"));
+        document.getElementById(target).classList.add("active");
+      });
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       const images = [
         'galeria/trabajo1.jpg',
@@ -271,3 +294,5 @@
   </script>
 </body>
 </html>
+
+
