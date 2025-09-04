@@ -2,238 +2,489 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Galería con Reseñas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maverick PC - Reparación de PCs en La Plata</title>
+  <meta name="description" content="Servicio de reparación de computadoras, asistencia remota, instalación de programas y más. Atención en La Plata y alrededores." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Firebase scripts de compatibilidad -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    html, body {
       margin: 0;
       padding: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #80322b;
+      background-color: #80322b;
+      background-image: url('galeria/background-image.jpg');
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: contain;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background: #333;
-      color: white;
       position: fixed;
-      width: 100%;
       top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 15px;
+      flex-wrap: wrap;
       z-index: 1000;
     }
-    .nav-links {
-      display: flex;
-      gap: 10px;
-    }
-    .nav-links button {
-      background: #555;
+    header button {
+      background: none;
       border: none;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 5px;
+      color: #80322b;
+      font-weight: bold;
+      font-size: 1em;
       cursor: pointer;
+      transition: color 0.3s;
     }
-    /* Menú hamburguesa */
-    .hamburger {
-      display: none;
-      font-size: 26px;
-      cursor: pointer;
-    }
-    .nav-links.mobile {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      background: #444;
-      padding: 10px 0;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      text-align: center;
-    }
-    .nav-links.mobile button {
-      margin: 8px 0;
+    header button:hover {
+      color: #4d1f17;
     }
 
-    /* Carrusel */
+    /* --- Menú hamburguesa --- */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8em;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #80322b;
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-buttons.active {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #logo {
+      max-width: 280px;
+      margin: 90px auto 40px auto;
+      display: block;
+      position: relative;
+      z-index: 10;
+    }
+    .description-section {
+      max-width: 700px;
+      margin: 20px auto 40px auto;
+      padding: 20px;
+      display: none;
+      opacity: 0;
+      background-color: rgba(255, 255, 255, 0.85);
+      color: #80322b;
+      border-radius: 12px;
+      transition: opacity 0.6s ease;
+      position: relative;
+      z-index: 5;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .description-section.active {
+      display: block;
+      opacity: 1;
+    }
+    .carousel-section {
+      max-width: 700px;
+      margin: 60px auto;
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      color: #80322b;
+      position: relative;
+      z-index: 5;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
     .carousel {
       position: relative;
-      max-width: 800px;
-      margin: 120px auto 30px auto;
-      overflow: hidden;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 400px;
+      margin: 0 auto;
     }
-    .carousel-item {
-      display: none;
+    .carousel img {
       width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .carousel-item.active {
-      display: block;
-    }
-    .carousel-item img,
-    .carousel-item video {
-      width: 100%;
-      border-radius: 15px;
-      max-height: 500px;
-      object-fit: cover;
-    }
-    .arrow {
+    .carousel .arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
+      background-color: rgba(0,0,0,0.5);
       color: white;
       border: none;
+      font-size: 20px;
       padding: 8px 12px;
       cursor: pointer;
       border-radius: 50%;
-      font-size: 20px;
+      user-select: none;
     }
-    .prev { left: 10px; }
-    .next { right: 10px; }
+    .carousel .prev { left: -20px; }
+    .carousel .next { right: -20px; }
 
-    /* Reseñas */
-    .reviews-section {
+    .faq {
       max-width: 700px;
       margin: 40px auto;
+      padding: 0 20px;
+      text-align: left;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      color: #80322b;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 5;
+    }
+    .faq h3 {
+      color: #80322b;
+    }
+
+    .reviews-section {
+      background-color: rgba(255, 255, 255, 0.85);
+      margin-top: 60px;
       padding: 20px;
-      border-radius: 15px;
-      background: #f5f5f5;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      width: 90%;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #80322b;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 5;
     }
     .review {
-      border-bottom: 1px solid #ccc;
-      padding: 10px 0;
+      background-color: #f0e5e2;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: left;
+      box-shadow: inset 0 0 6px rgba(128,50,43,0.1);
     }
-    .review:last-child { border-bottom: none; }
+    .rating-summary {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #FF9900;
+      font-size: 1.2em;
+    }
+    input, textarea, select, button.submit-button {
+      font-family: inherit;
+      font-size: 1em;
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-width: 600px;
+      color: #80322b;
+    }
+    button.submit-button {
+      background-color: #2c74f2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      border: none;
+    }
+    .floating-buttons {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .floating-buttons a {
+      background-color: #25D366;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .floating-buttons a.instagram {
+      background-color: #E1306C;
+    }
+    .floating-buttons a:hover {
+      filter: brightness(1.1);
+    }
 
-    /* Responsive */
+    /* --- OPTIMIZACIÓN MOBILE --- */
     @media (max-width: 768px) {
-      .hamburger { display: block; }
-      .nav-links.desktop { display: none; }
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .nav-buttons {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+      }
+      .nav-buttons.active {
+        display: flex;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        margin-top: 10px;
+        padding: 10px;
+      }
+      #logo {
+        max-width: 70%;
+        margin: 120px auto 30px auto;
+      }
+      .description-section, 
+      .carousel-section, 
+      .faq, 
+      .reviews-section {
+        width: 95%;
+        margin: 15px auto;
+        padding: 15px;
+      }
+      .carousel {
+        max-width: 100%;
+      }
+      .carousel .arrow {
+        font-size: 16px;
+        padding: 6px 10px;
+      }
+      .carousel .prev { left: 0; }
+      .carousel .next { right: 0; }
+      .floating-buttons {
+        left: auto;
+        right: 15px;
+        bottom: 15px;
+        flex-direction: row;
+        gap: 8px;
+      }
+      .floating-buttons a {
+        padding: 8px 10px;
+        font-size: 0.85em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #logo {
+        max-width: 85%;
+        margin-top: 100px;
+      }
+      h2, h3, p {
+        font-size: 0.95em;
+      }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>Mi Página</h1>
-    <nav>
-      <div class="nav-links desktop">
-        <button onclick="scrollToSection('carousel')">Galería</button>
-        <button onclick="scrollToSection('reviews')">Reseñas</button>
-      </div>
-      <div class="hamburger" onclick="toggleMenu()">☰</div>
-      <div class="nav-links mobile" id="mobileMenu">
-        <button onclick="scrollToSection('carousel'); toggleMenu()">Galería</button>
-        <button onclick="scrollToSection('reviews'); toggleMenu()">Reseñas</button>
-      </div>
-    </nav>
+    <button class="menu-toggle">☰</button>
+    <div class="nav-buttons">
+      <button class="nav-button" data-target="quienes">QUIÉNES SOMOS</button>
+      <button class="nav-button" data-target="remota">ASISTENCIA REMOTA</button>
+      <button class="nav-button" data-target="arreglos">ARREGLOS TÉCNICOS</button>
+      <button class="nav-button" data-target="reparacion">REPARACIÓN DE PCS</button>
+      <button class="nav-button" data-target="programas">INSTALACIÓN DE PROGRAMAS</button>
+      <button class="nav-button" data-target="trabajos">NUESTROS TRABAJOS</button>
+    </div>
   </header>
 
-  <!-- Carrusel (fotos + videos) -->
-  <div id="carousel" class="carousel">
-    <div class="carousel-item active">
-      <img src="trabajo1.jpg" alt="Trabajo 1">
-    </div>
-    <div class="carousel-item">
-      <img src="trabajo2.jpg" alt="Trabajo 2">
-    </div>
-    <div class="carousel-item">
-      <video controls>
-        <source src="trabajo3.mp4" type="video/mp4">
-        Tu navegador no soporta videos.
-      </video>
-    </div>
-    <div class="carousel-item">
-      <video controls>
-        <source src="trabajo4.mp4" type="video/mp4">
-        Tu navegador no soporta videos.
-      </video>
-    </div>
-    <button class="arrow prev" onclick="moveSlide(-1)">❮</button>
-    <button class="arrow next" onclick="moveSlide(1)">❯</button>
+  <img id="logo" src="logo.png" alt="Maverick PC Logo" />
+
+  <div id="quienes" class="description-section">
+    <p>Maverick PC es un emprendimiento familiar con más de 10 años de experiencia. Nos dedicamos con compromiso y responsabilidad a brindar soluciones informáticas, mejorando continuamente la calidad de los servicios que ofrecemos.</p>
   </div>
 
-  <!-- Reseñas -->
-  <div id="reviews" class="reviews-section">
-    <h2>Reseñas</h2>
-    <div id="ratingSummary"></div>
-    <div id="reviewsList"></div>
-    <h3>Dejá tu reseña:</h3>
+  <div id="remota" class="description-section active">
+    <p>A través de AnyDesk, podemos ayudarte sin que te muevas de tu casa: instalamos programas, resolvemos problemas y más.</p>
+  </div>
+  <div id="arreglos" class="description-section">
+    <p>Solucionamos problemas técnicos frecuentes de forma express, incluyendo configuración de periféricos (impresoras, cámaras, micrófonos, etc.), conectividad y más.</p>
+  </div>
+  <div id="reparacion" class="description-section">
+    <p>Ofrecemos reparación presencial con diagnóstico completo. También realizamos reemplazo de repuestos y optimización general del sistema para devolverle el rendimiento a tu equipo.</p>
+  </div>
+  <div id="programas" class="description-section">
+    <p>Instalamos software esencial para tu equipo, como AutoCAD, paquetes de Adobe, juegos, Windows y mucho más. Optimizamos cada instalación para que tu PC funcione de manera eficiente desde el primer momento.</p>
+  </div>
+
+  <div id="trabajos" class="carousel-section description-section">
+    <h2>Nuestros Trabajos</h2>
+    <div class="carousel">
+      <button class="arrow prev" id="prevBtn">❮</button>
+      <img id="carouselImage" src="galeria/trabajo1.jpg" alt="Trabajo realizado" />
+      <button class="arrow next" id="nextBtn">❯</button>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2>Preguntas Frecuentes</h2>
+    <h3>¿Cómo funciona la asistencia remota?</h3>
+    <p>Usamos AnyDesk para acceder a tu PC de forma segura y ayudarte con instalaciones, problemas técnicos o configuraciones. No necesitás salir de tu casa.</p>
+    <h3>¿Cuánto tarda un trabajo?</h3>
+    <p>Te informaremos el plazo exacto una vez revisado el equipo, para ofrecerte una solución honesta y eficaz.</p>
+    <h3>¿Trabajan con notebooks?</h3>
+    <p>Sí, trabajamos con todo tipo de notebooks y computadoras.</p>
+    <h3>¿Tienen repuestos?</h3>
+    <p>Contamos con proveedor confiable de repuestos. En caso de necesitar uno, se te avisa el tiempo estimado.</p>
+    <h3>¿Qué medios de pago aceptan?</h3>
+    <p>Transferencia bancaria (todos los bancos), billeteras virtuales (MercadoPago, Ualá, etc.) y efectivo.</p>
+  </div>
+
+  <div class="reviews-section">
+    <h2>Reseñas de clientes</h2>
+    <p id="ratingSummary" class="rating-summary"></p>
+    <div id="reviewsContainer"></div>
     <form id="reviewForm">
-      <input type="text" id="nameInput" placeholder="Tu nombre" required><br><br>
-      <textarea id="commentInput" placeholder="Tu comentario" required></textarea><br><br>
+      <input type="text" id="nameInput" placeholder="Tu nombre" required /><br />
+      <textarea id="commentInput" placeholder="Escribí tu reseña" required></textarea><br />
+      <label for="ratingInput">Puntaje:</label>
       <select id="ratingInput" required>
-        <option value="">Puntaje</option>
-        <option value="1">1 ⭐</option>
-        <option value="2">2 ⭐⭐</option>
-        <option value="3">3 ⭐⭐⭐</option>
-        <option value="4">4 ⭐⭐⭐⭐</option>
-        <option value="5">5 ⭐⭐⭐⭐⭐</option>
-      </select><br><br>
-      <button type="submit">Enviar</button>
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select><br />
+      <button type="submit" class="submit-button">Enviar reseña</button>
     </form>
   </div>
 
+  <div class="floating-buttons">
+    <a class="instagram" href="https://www.instagram.com/maverickpc.lp/" target="_blank">Instagram</a>
+    <a href="https://wa.me/5492215483353" target="_blank">WhatsApp</a>
+  </div>
+
   <script>
-    // --- Menú hamburguesa ---
-    function toggleMenu() {
-      const menu = document.getElementById("mobileMenu");
-      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-    }
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({behavior: "smooth"});
-    }
+    // Toggle menú hamburguesa
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      document.querySelector(".nav-buttons").classList.toggle("active");
+    });
 
-    // --- Carrusel ---
-    let currentSlide = 0;
-    const slides = document.querySelectorAll(".carousel-item");
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.remove("active");
-        if (i === index) slide.classList.add("active");
+    // Navegación entre secciones
+    const navButtons = document.querySelectorAll(".nav-button");
+    const sections = document.querySelectorAll(".description-section");
+    navButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.getAttribute("data-target");
+        sections.forEach((section) => section.classList.remove("active"));
+        document.getElementById(target).classList.add("active");
+        // Cierra el menú en móvil al seleccionar
+        document.querySelector(".nav-buttons").classList.remove("active");
       });
-    }
-    function moveSlide(step) {
-      currentSlide = (currentSlide + step + slides.length) % slides.length;
-      showSlide(currentSlide);
-    }
+    });
 
-    // --- Reseñas (ejemplo sin backend) ---
-    const reviewsList = document.getElementById("reviewsList");
-    const ratingSummary = document.getElementById("ratingSummary");
-    let reviews = [];
+    // Carrusel
+    document.addEventListener("DOMContentLoaded", () => {
+      const images = [
+        "galeria/trabajo1.jpg",
+        "galeria/trabajo2.jpg",
+        "galeria/trabajo3.jpg",
+        "galeria/trabajo4.jpg",
+        "galeria/trabajo5.jpg",
+      ];
+      let index = 0;
+      const imgElement = document.getElementById("carouselImage");
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        index = (index + 1) % images.length;
+        imgElement.src = images[index];
+      });
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        index = (index - 1 + images.length) % images.length;
+        imgElement.src = images[index];
+      });
+    });
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjHQGZsc8E9N4pjphjVR_IgnBN1xicFC0",
+      authDomain: "maverick-pc.firebaseapp.com",
+      projectId: "maverick-pc",
+      storageBucket: "maverick-pc.firebasestorage.app",
+      messagingSenderId: "635412742148",
+      appId: "1:635412742148:web:c3b9b67954d0933f74f551"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const reviewsCollection = db.collection('reviews');
 
     function starsFromRating(rating) {
-      return "⭐".repeat(rating) + "☆".repeat(5 - rating);
+      const maxStars = 5;
+      let stars = '';
+      for(let i=0; i<rating; i++) stars += '⭐';
+      for(let i=rating; i<maxStars; i++) stars += '☆';
+      return stars;
     }
 
-    function renderReviews() {
-      reviewsList.innerHTML = "";
-      let total = 0;
-      reviews.forEach(r => {
-        total += r.rating;
-        const div = document.createElement("div");
-        div.classList.add("review");
-        div.innerHTML = `<strong>${r.name}</strong> - ${starsFromRating(r.rating)}<br>${r.comment}`;
-        reviewsList.appendChild(div);
+    function loadReviews() {
+      reviewsCollection.orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        const reviewsContainer = document.getElementById("reviewsContainer");
+        reviewsContainer.innerHTML = '';
+        let totalRating = 0;
+        let count = 0;
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const reviewDiv = document.createElement('div');
+          reviewDiv.classList.add('review');
+          reviewDiv.innerHTML = `<strong>${data.name}:</strong> ${data.comment}<br /><span>${starsFromRating(data.rating)}</span>`;
+          reviewsContainer.appendChild(reviewDiv);
+          totalRating += data.rating;
+          count++;
+        });
+        updateRatingSummary(totalRating, count);
       });
-      const avg = reviews.length ? (total / reviews.length).toFixed(1) : 0;
-      ratingSummary.textContent = reviews.length ? `Promedio: ${avg} ⭐ (${reviews.length} reseñas)` : "Todavía no hay reseñas.";
     }
 
-    document.getElementById("reviewForm").addEventListener("submit", e => {
+    function updateRatingSummary(total, count) {
+      const ratingSummary = document.getElementById("ratingSummary");
+      if(count === 0) {
+        ratingSummary.textContent = "No hay reseñas aún.";
+        return;
+      }
+      const avg = total / count;
+      const stars = starsFromRating(Math.round(avg));
+      ratingSummary.textContent = `Promedio: ${avg.toFixed(1)} ${stars} (basado en ${count} reseñas)`;
+    }
+
+    document.getElementById("reviewForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const name = document.getElementById("nameInput").value;
       const comment = document.getElementById("commentInput").value;
       const rating = parseInt(document.getElementById("ratingInput").value);
-      reviews.push({name, comment, rating});
-      renderReviews();
-      e.target.reset();
+      await reviewsCollection.add({
+        name,
+        comment,
+        rating,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      document.getElementById("reviewForm").reset();
     });
 
-    renderReviews();
+    loadReviews();
   </script>
 </body>
 </html>
+
+
